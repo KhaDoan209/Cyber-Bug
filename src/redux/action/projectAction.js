@@ -1,4 +1,3 @@
-import { http } from '../../services/interceptor';
 import {
    assignUserProjectService,
    createProjectAuthorizeService,
@@ -21,10 +20,12 @@ import {
    deleteTaskService,
 } from '../../services/ProjectService/projectService';
 
+import { getProjectList } from '../reducer/projectReducer';
 export const getAllProjectAction = () => {
    return async (dispatch) => {
       try {
          let result = await getAllProjectService();
+         dispatch(getProjectList(result));
       } catch (error) {
          console.log(error);
       }
