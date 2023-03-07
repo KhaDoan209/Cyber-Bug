@@ -82,8 +82,17 @@ export const assignUserProjectAction = (data) => {
    return async (dispatch) => {
       try {
          let result = await assignUserProjectService(data);
+         await dispatch(getAllProjectAction());
+         notifiFunction('success', 'Add User thành công nha !');
       } catch (error) {
          console.log(error);
+         if (error.statusCode === 500) {
+            notifiFunction('error', 'User đã được thêm ,vui lòng chọn User khác!');
+
+         } else if (error.statusCode === 403) {
+            notifiFunction('error', 'Bạn không có quyền!');
+
+         }
       }
    };
 };
@@ -112,6 +121,8 @@ export const removeUserFromProjectAction = (data) => {
    return async (dispatch) => {
       try {
          let result = await removeUserFromProjectService(data);
+         await dispatch(getAllProjectAction());
+         notifiFunction('success', 'Remove User thành công nha !')
       } catch (error) {
          console.log(error);
       }
@@ -122,8 +133,15 @@ export const createTaskAction = (data) => {
    return async (dispatch) => {
       try {
          let result = await createTaskService(data);
+         console.log('result', result);
+         await dispatch(getAllProjectAction());
+         notifiFunction('success', 'Create Task thành công nha !')
+
       } catch (error) {
          console.log(error);
+         if (error.statusCode === 403) {
+            notifiFunction('error', 'Không phải Project của bạn !')
+         }
       }
    };
 };
