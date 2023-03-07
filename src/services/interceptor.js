@@ -1,13 +1,16 @@
 import axios from 'axios';
-import { AccessToken, Domain, TokenCyber } from '../utils/settings';
-export const http = axios.create();
+import { ACCESS_TOKEN, Domain, TokenCyber } from '../utils/settings';
 
+
+
+
+export const http = axios.create();
 http.interceptors.request.use(
    function (config) {
       config.baseURL = Domain;
       config.headers = {
          TokenCybersoft: TokenCyber,
-         Authorization: `Bearer ${AccessToken}`,
+         Authorization: 'Bearer '+ localStorage.getItem(ACCESS_TOKEN),
       };
       return { ...config };
    },
