@@ -7,9 +7,10 @@ import Highlighter from 'react-highlight-words';
 import { NavLink } from 'react-router-dom';
 
 
-import { getAllProjectAction ,deleteProjectAction } from "../../redux/action/projectAction";
+import { getAllProjectAction, deleteProjectAction, assignUserProjectAction, removeUserFromProjectAction } from "../../redux/action/projectAction";
 import { open_drawer_create_project, open_drawer_edit } from '../../redux/reducer/drawerHOCReducer';
 import { edit_project } from '../../redux/reducer/projectReducer';
+import { getAllUserAction } from '../../redux/action/userAction';
 
 const confirm = (e) => {
    message.success('Click on Yes');
@@ -20,55 +21,14 @@ const cancel = (e) => {
 };
 const ProjectDashboard = () => {
    const { projectList } = useSelector(state => state.projectReducer);
-   // console.log('project list', projectList)
-   // const { userSearch } = useSelector(state => state.UserLoginJiraReducer)
+   const { allUser } = useSelector(state => state.userReducer)
+   // console.log(' list', allUser)
+
    const searchRef = useRef(null);
    const dispatch = useDispatch();
 
    const [value, setValue] = useState("");
 
-   const [searchText, setSearchText] = useState('');
-   const [searchedColumn, setSearchedColumn] = useState('');
-   const searchInput = useRef(null);
-   const handleSearch = (selectedKeys, confirm, dataIndex) => {
-      confirm();
-      setSearchText(selectedKeys[0]);
-      setSearchedColumn(dataIndex);
-   };
-   const handleReset = (clearFilters) => {
-      clearFilters();
-      setSearchText('');
-   };
-   const getColumnSearchProps = (dataIndex) => ({
-      filterIcon: (filtered) => (
-         <SearchOutlined
-            style={{
-               color: filtered ? '#1890ff' : undefined,
-            }}
-         />
-      ),
-      onFilter: (value, record) =>
-         record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-      onFilterDropdownOpenChange: (visible) => {
-         if (visible) {
-            setTimeout(() => searchInput.current?.select(), 100);
-         }
-      },
-      render: (text) =>
-         searchedColumn === dataIndex ? (
-            <Highlighter
-               highlightStyle={{
-                  backgroundColor: '#ffc069',
-                  padding: 0,
-               }}
-               searchWords={[searchText]}
-               autoEscape
-               textToHighlight={text ? text.toString() : ''}
-            />
-         ) : (
-            text
-         ),
-   });
    const columns = [
       {
          title: 'ID',
@@ -141,7 +101,7 @@ const ProjectDashboard = () => {
                               <th>ID</th>
                               <th className='text-center'>Avatar</th>
                               <th>Name</th>
-                              <th><ToolOutlined /></th>
+                              <th><ToolOutlined style={{ fontSize: '18px' }} /></th>
                            </tr>
                         </thead>
                         <tbody>
@@ -153,7 +113,14 @@ const ProjectDashboard = () => {
                                  </td>
                                  <td>{item.name}</td>
                                  <td>
-                                    <ClearOutlined className='btn btn-danger' />
+                                    <ClearOutlined className='btn btn-danger' onClick={() => {
+                                       const userProject = {
+                                          userId: item.userId,
+                                          projectId: record.id,
+                                       }
+                                       //gửi action xóa
+                                       dispatch(removeUserFromProjectAction(userProject))
+                                    }} />
                                  </td>
                               </tr>
                            })}
@@ -167,43 +134,40 @@ const ProjectDashboard = () => {
 
                <Popover placement='rightTop' title={'Add User'} content={() => {
                   return <AutoComplete
-                     // options={userSearch?.map((user, index) => {
-                     //    return { label: user.name, value: user.userId.toString() }
-                     // })}
+                     options={allUser?.map((user, index) => {
+                        return { label: user.name, value: user.userId.toString() }
+                     })}
 
                      value={value}
 
                      onChange={(text) => {
                         setValue(text);
                      }}
-
                      onSelect={(valueSelect, option) => {
                         // set gia  tri hop thoai 
                         setValue(option.label);
-                        //goi api
-                        dispatch({
-                           // type: ADD_USER_PROJECT,
-                           userProject: {
-                              'projectId': record.id,
-                              'userId': Number(valueSelect)
-                           }
-                        })
+                        let userProject = {
+                           'projectId': record.id,
+                           'userId': Number(valueSelect)
+                        }
+                        //goi api assignUserProject de add user vao project
+                        dispatch(assignUserProjectAction(userProject))
+
                      }}
 
                      style={{ width: '100%' }}
                      onSearch={(value) => {
+                        console.log('value', value)
                         if (searchRef.current) {
                            clearTimeout(searchRef.current);
                         }
                         searchRef.current = setTimeout(() => {
-                           dispatch({
-                              // type: GET_USER_API,
-                              keyword: value
-                           })
+                           // call api lay danh sach tat ca user
+                           dispatch(getAllUserAction(value))
                         }, 300)
                      }} />
                }} trigger="click">
-                  <UserAddOutlined className='btn btn-primary ml-2' style={{borderRadius:'50%'}}/>
+                  <UserAddOutlined className='btn btn-primary ml-2' style={{ borderRadius: '50%' }} />
                </Popover>
             </div>
          },
@@ -223,7 +187,6 @@ const ProjectDashboard = () => {
                <Popconfirm
                   title="Delete Project ?"
                   onConfirm={() => {
-                     console.log('id project la:', record.id);
                      // gui dispatch id project can xoa
                      dispatch(deleteProjectAction(record.id))
                   }}
@@ -241,12 +204,13 @@ const ProjectDashboard = () => {
 
    useEffect(() => {
       dispatch(getAllProjectAction())
+
    }, [])
    return <div className='container'>
       <h1 className='mb-4'>Project Management</h1>
       <button className='btn btn-primary mb-2' onClick={() => {
          dispatch(open_drawer_create_project())
-      }}> Add Project</button>
+      }}> Add New Project</button>
       <Table rowKey={'id'} style={{ width: '100%' }} columns={columns} dataSource={projectList} />
    </div>
 };

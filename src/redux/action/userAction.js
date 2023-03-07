@@ -7,15 +7,20 @@ import {
    deleteUserService,
 } from '../../services/ProjectService/userService';
 import { ACCESS_TOKEN, USER_LOGIN } from '../../utils/settings';
-import { getAllUserReducer } from '../reducer/userReducer';
+import { getAllUserReducer, getUserFromProject } from '../reducer/userReducer';
 import { history } from '../../App';
+import { notifiFunction } from '../../utils/Notification/notification';
 
 export const signUpAction = (accountToSignUp) => {
    return async (dispatch) => {
       try {
          const result = await signUpService(accountToSignUp);
+         // console.log('result', result)
+         notifiFunction('success', 'Register thành công !');
+         history.push('/login');
       } catch (error) {
          console.log(error);
+         notifiFunction('error', 'Email đã được sử dụng !');
       }
    };
 };
@@ -24,11 +29,10 @@ export const signInAction = (accountToSignIn) => {
    return async (dispatch) => {
       try {
          const result = await signInService(accountToSignIn);
-         console.log('data', result)
          // Lưu vào localStorage khi đăng nhập thành công
          localStorage.setItem(ACCESS_TOKEN, result.accessToken)
          localStorage.setItem(USER_LOGIN, JSON.stringify(result))
-         
+
          history.push('/');
       } catch (error) {
          console.log(error);
@@ -36,11 +40,12 @@ export const signInAction = (accountToSignIn) => {
    };
 };
 
-export const getAllUserAction = () => {
+export const getAllUserAction = (keyword) => {
    return async (dispatch) => {
       try {
-         const result = await getAllUserService();
+         const result = await getAllUserService(keyword);
          dispatch(getAllUserReducer(result));
+         // console.log("data", result)
       } catch (error) {
          console.log(error);
       }
@@ -48,11 +53,17 @@ export const getAllUserAction = () => {
 };
 
 export const getUserByProjectIdAction = (id) => {
+   console.log('id', id);
    return async (dispatch) => {
       try {
          const result = await getUserByProjectIdService(id);
+         console.log("arr",result)   
+            await dispatch(getUserFromProject(result))
       } catch (error) {
          console.log(error);
+         if (error.statusCode === 404){
+            dispatch(getUserFromProject([]));
+         }
       }
    };
 };

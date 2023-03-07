@@ -41,9 +41,6 @@ const Login = (props) => {
               Submit
             </a>
           </button>
-
-
-
         </form>
       </div>
     </div>

@@ -1,13 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {};
+const initialState = {
+   listTaskTypes: [],
+};
 
 const taskTypeReducer = createSlice({
    name: 'taskTypeReducer',
    initialState,
-   reducers: {},
+   reducers: {
+      get_list_tasktype: (state, action) => {
+         state.listTaskTypes = action.payload;
+      },
+   },
 });
 
-export const {} = taskTypeReducer.actions;
+export const {get_list_tasktype} = taskTypeReducer.actions;
 
 export default taskTypeReducer.reducer;

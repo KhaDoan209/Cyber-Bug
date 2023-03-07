@@ -11,6 +11,7 @@ const initialState = {
       "categoryId": 3
    },
    projectDetail: {}
+   
 };
 
 const projectReducer = createSlice({
