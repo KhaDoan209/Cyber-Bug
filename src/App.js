@@ -9,6 +9,7 @@ import Loading from './components/Loading/Loading';
 import DrawerHOC from './components/HOC/DrawerHOC';
 import Register from './Pages/Register/Register';
 import FormCreateTask from './components/Forms/FormTask/FormCreateTask';
+import ProjectDetail from './Pages/Project/ProjectDetail';
 export const history = createBrowserHistory();
 function App() {
    return (
@@ -29,6 +30,10 @@ function App() {
                exact
                path='/register'
                component={Register}
+            />
+            <HomeTemplate
+               path='/projectdetail/:projectId'
+               component={ProjectDetail}
             />
             <HomeTemplate
                path='/'

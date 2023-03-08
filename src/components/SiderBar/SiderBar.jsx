@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { open_drawer_create_task } from '../../redux/reducer/drawerHOCReducer';
+import jira from '../../assets/img/jira.png'
 const { Header, Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -16,8 +17,6 @@ function getItem(label, key, icon, children) {
     label
   };
 }
-
-
 const SiderBar = () => {
   const dispatch = useDispatch();
   const items = [
@@ -42,9 +41,11 @@ const SiderBar = () => {
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div
           style={{
-            height: 32,
-            margin: 16,
-            background: 'rgba(255, 255, 255, 0.2)',
+            height: 60,
+            margin: 10,
+            backgroundImage: `url(${jira})`,
+            backgroundRepeat:'no-repeat',
+            backgroundSize:'cover'
           }}
         />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />

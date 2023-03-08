@@ -1,13 +1,17 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 import SiderBar from '../components/SiderBar/SiderBar';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { ACCESS_TOKEN } from '../utils/settings';
 const { Header, Content, Footer, Sider } = Layout;
 
 const HomeTemplate = (props) => {
    const {
       token: { colorBgContainer },
    } = theme.useToken();
+   if (!localStorage.getItem(ACCESS_TOKEN)) {
+      return <Redirect to='/login'/>
+   }
    return (
       <Route
          exact

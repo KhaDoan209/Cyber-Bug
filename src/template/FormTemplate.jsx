@@ -23,7 +23,7 @@ const FormTemplate = (props) => {
             return (
                <>
                   <Layout>
-                     <Sider width={width / 2} style={{ height:"100vh", backgroundImage: `url(${imgForm})`, backgroundSize: '100%' }}>
+                     <Sider width='60%' style={{ height:"100vh", backgroundImage: `url(${imgForm})`, backgroundSize: 'cover' ,backgroundRepeat:'no-repeat'} }>
                      </Sider>
                      <Content style={{ background: "linear-gradient(#141e30, #243b55)" }}>
                         <props.component {...propsRoute} />
