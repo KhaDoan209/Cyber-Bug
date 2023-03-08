@@ -23,12 +23,12 @@ const projectReducer = createSlice({
       edit_project: (state, action) => {
          state.projectEdit = action.payload;
       },
-      put_project_detail: (state, action) => {
+      get_project_detail: (state, action) => {
          state.projectDetail = action.payload;
-      }
+      },
    },
 });
 
-export const { get_list_project, edit_project, put_project_detail } = projectReducer.actions;
+export const { get_list_project, edit_project, get_project_detail } = projectReducer.actions;
 
 export default projectReducer.reducer;

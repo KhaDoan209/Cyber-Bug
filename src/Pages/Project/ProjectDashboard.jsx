@@ -23,7 +23,6 @@ const ProjectDashboard = () => {
    const { projectList } = useSelector(state => state.projectReducer);
    const { allUser } = useSelector(state => state.userReducer)
    // console.log(' list', allUser)
-
    const searchRef = useRef(null);
    const dispatch = useDispatch();
 

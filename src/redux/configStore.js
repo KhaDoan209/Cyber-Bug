@@ -8,6 +8,7 @@ import taskTypeReducer from './reducer/taskTypeReducer';
 import statusReducer from './reducer/statusReducer';
 import loadingReducer from './reducer/loadingReducer';
 import drawerHOCReducer from './reducer/drawerHOCReducer';
+import taskModalReducer from './reducer/taskModalReducer';
 
 
 export const store = configureStore({
@@ -21,6 +22,7 @@ export const store = configureStore({
       statusReducer,
       loadingReducer,
       drawerHOCReducer,
+      taskModalReducer
    },
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

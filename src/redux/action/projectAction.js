@@ -21,16 +21,20 @@ import {
    deleteTaskService,
 } from '../../services/ProjectService/projectService';
 import { notifiFunction } from '../../utils/Notification/notification';
-import { get_list_project } from '../reducer/projectReducer';
+import { displayLoading, hideLoading } from '../reducer/loadingReducer';
+import { get_list_project, get_project_detail } from '../reducer/projectReducer';
 
 export const getAllProjectAction = () => {
    return async (dispatch) => {
       try {
+         await dispatch(displayLoading())
          let result = await getAllProjectService();
          // console.log('data',result);
          await dispatch(get_list_project(result));
+         await dispatch(hideLoading())
       } catch (error) {
          console.log(error);
+         await dispatch(hideLoading())
       }
    };
 };
@@ -39,7 +43,7 @@ export const getProjectDetailAction = (id) => {
    return async (dispatch) => {
       try {
          let result = await getProjectDetailService(id);
-         console.log(result);
+         await dispatch(get_project_detail(result));
       } catch (error) {
          console.log(error);
       }
@@ -62,6 +66,7 @@ export const createProjectAction = (data) => {
          let result = await createProjectService(data);
       } catch (error) {
          console.log(error);
+
       }
    };
 };
@@ -69,11 +74,14 @@ export const createProjectAction = (data) => {
 export const createProjectAuthorizeAction = (data) => {
    return async (dispatch) => {
       try {
+         await dispatch(displayLoading())
          let result = await createProjectAuthorizeService(data);
          await dispatch(getAllProjectAction());
+         await dispatch(hideLoading())
          notifiFunction('success', 'Add Project thành công nha !');
       } catch (error) {
          console.log(error);
+         await dispatch(hideLoading())
       }
    };
 };
@@ -132,13 +140,14 @@ export const removeUserFromProjectAction = (data) => {
 export const createTaskAction = (data) => {
    return async (dispatch) => {
       try {
+         await dispatch(displayLoading())
          let result = await createTaskService(data);
-         console.log('result', result);
          await dispatch(getAllProjectAction());
+         await dispatch(hideLoading())
          notifiFunction('success', 'Create Task thành công nha !')
-
       } catch (error) {
          console.log(error);
+         await dispatch(hideLoading())
          if (error.statusCode === 403) {
             notifiFunction('error', 'Không phải Project của bạn !')
          }
