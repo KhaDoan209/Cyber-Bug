@@ -10,7 +10,11 @@ const initialState = {
             "id": 1,
             "taskType": "bug"
         },
-        "assigness": [],
+        "assigness": [
+            { userId: 2537, name: 'Admin Cyberlearn - 02', avatar: 'https://ui-avatars.com/api/?name=Admin Cyberlearn - 02', email: null, phoneNumber: null },
+            { userId: 3960, name: 'Đỗ Nhật', avatar: 'https://ui-avatars.com/api/?name=Đỗ Nhật', email: null, phoneNumber: null },
+            { userId: 3974, name: 'LE TRAN QUANG TÈOa', avatar: 'https://ui-avatars.com/api/?name=LE TRAN QUANG TÈOa', email: null, phoneNumber: null }
+        ],
         "lstComment": [],
         "taskId": 9298,
         "taskName": "thanh",
