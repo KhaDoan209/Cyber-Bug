@@ -38,8 +38,8 @@ const ProjectDetail = (props) => {
 
     }
     const handleDragEnd = (result) => {
-        let { projectId, taskId } = JSON.parse(result.droppableId)
-        console.log(projectId, taskId)
+        let {projectId,taskId} = JSON.parse(result.droppableId)
+        console.log(projectId,taskId)
         console.log(result)
 
     }
@@ -55,34 +55,51 @@ const ProjectDetail = (props) => {
         return <DragDropContext onDragEnd={handleDragEnd}>
             {
                 projectDetail.lstTask?.map((colum, index) => {
-                    return <Droppable key={index} droppableId={colum.statusId}>
+                    return <Droppable key={index} droppableId={colum.statusName}>
                         {(provided) => {
-                            return <Col ref={provided.innerRef} {...provided.droppableProps} key={index} span={6}>
-                                <Card title={<Tag color={`${color[index]}`}>{colum.statusName}</Tag>} bordered={true} style={{ backgroundColor: '#F5F5F5' }}>
+                            return <div style={{ width: "17rem" }} key={index} span={6}>
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    key={index}
+                                    title={<Tag color={`${color[index]}`}>{colum.statusName}</Tag>} bordered={true} style={{ backgroundColor: '#F5F5F5' }}>
                                     {colum.lstTaskDeTail.length > 0 ? (colum.lstTaskDeTail.map((task, index) => {
-                                        return <Draggable draggableId={task.taskId.toString()} key={task.taskId.toString()} index={index}>
+                                        return <Draggable draggableId={JSON.stringify({projectId:task.projectId,taskId:task.taskId})} key={task.taskId.toString()} index={index}>
                                             {(provided) => {
-                                                return <div ref={provided.innerRef}
+                                                return <Card
+                                                    ref={provided.innerRef}
                                                     {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}>
-                                                    <Card
-                                                        className='mb-2 text-center' onClick={() => {
-                                                            setOpen(true)
-                                                            console.log("task", task.taskId)
-                                                            dispatch(getTaskDetailAction(task.taskId))
-                                                        }} key={index} title={task.taskName} bordered={true} style={{ backgroundColor: '#FFFFFF' }}>
-                                                        <Space size={[0, 8]} wrap >
-                                                            {task.taskTypeDetail.id === 1 ? <Tag color="#f50">{task.taskTypeDetail.taskType}</Tag> : <Tag color="#108ee9">{task.taskTypeDetail.taskType}</Tag>}
-                                                            <Tag color="#2db7f5">{task.priorityTask.priority}</Tag>
-                                                        </Space>
-                                                    </Card>
-                                                </div>
+                                                    {...provided.dragHandleProps}
+                                                    className='mb-2 text-center' onClick={() => {
+                                                        setOpen(true)
+                                                        console.log("task", task.taskId)
+                                                        dispatch(getTaskDetailAction(task.taskId))
+                                                        //    dispatch(getTaskDetailAction())
+                                                    }} key={index} title={task.taskName} bordered={true} style={{ backgroundColor: '#FFFFFF' }}>
+                                                    <Space key={index} style={{ marginBottom: "10px" }}>
+                                                        <div className="content" style={{ display: "flex" }}>
+                                                            <div className="row"  >
+                                                                {task.assigness.map((mem, index) => {
+                                                                    return <div className='col' key={index}>
+                                                                        <img style={{ width: "100%", borderRadius: "50%" }} src={mem.avatar} alt={mem.avatar} />
+                                                                    </div>
+                                                                })}
+                                                            </div>
+                                                        </div>
+                                                    </Space>
+                                                    <Space size={[0, 8]} wrap >
+                                                        {task.taskTypeDetail.id === 1 ? <Tag color="#f50">{task.taskTypeDetail.taskType}</Tag> : <Tag color="#108ee9">{task.taskTypeDetail.taskType}</Tag>}
+                                                        <Tag color="#2db7f5">{task.priorityTask.priority}</Tag>
+                                                    </Space>
+                                                </Card>
                                             }}
                                         </Draggable>
                                     })) : ''}
-                                </Card>
-                                {provided.placeholder}
-                            </Col>
+
+                                    {provided.placeholder}
+                                </div>
+
+                            </div>
                         }}
                     </Droppable>
                 })}
@@ -191,57 +208,84 @@ const ProjectDetail = (props) => {
                             </Col>
                         </Row>
                     </Col>
-
-                    <Col span={24}>
-
-                        <div className="form-group">
-                            <h5>Status</h5>
-                            <select name='statusId' className='form-control' value={taskDetailModal.statusId} onChange={(e) => {
-                                handleOnChange(e)
-                            }}>
-                                {listStatus.map((status, index) => {
-                                    return <option key={index} value={status.statusId}>
-                                        {status.statusName}
-                                    </option>
-                                })}
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <h5>Priority</h5>
-                            <select name='priorityId' className='form-control' value={taskDetailModal.priorityId} onChange={(e) => {
-                                handleOnChange(e)
-                            }} >
-                                {listPriority.map((status, index) => {
-                                    return <option key={index} value={status.priorityId}>
-                                        {status.priority}
-                                    </option>
-                                })}
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <h5>Assign</h5>
-                            <div className='row' style={{ display: "flex" }}>
-                                {taskDetailModal.assigness.map((mem, index) => {
-                                    return <div className="col-6 mt-2 mb-2 text-center" style={{ display: "flex" }} key={index}>
-                                        <div>
-                                            <img style={{ width: "100%", borderRadius: "50%" }} src={mem.avatar} alt={mem.avatar} />
-                                            <p className='mt-1 ml-1'>{mem.name}
-
-                                            </p>
-                                        </div>
-                                        <div>
-
-                                            < h3 style={{ cursor: "pointer" }} onClick={() => {
-                                                dispatch(delete_member_task(mem.id))
-                                            }}>x</h3>
-
-                                        </div>
-
-                                    </div>
-
-                                })}
+                    <Col span={8}>
+                        <Col span={24}>
+                            <div className="form-group">
+                                <h5>Status</h5>
+                                <select name='statusId' className='form-control' value={taskDetailModal.statusId} onChange={(e) => {
+                                    handleOnChange(e)
+                                }}>
+                                    {listStatus.map((status, index) => {
+                                        return <option key={index} value={status.statusId}>
+                                            {status.statusName}
+                                        </option>
+                                    })}
+                                </select>
                             </div>
-                        </div>
+                            <div className="form-group">
+                                <h5>Priority</h5>
+                                <select name='priorityId' className='form-control' value={taskDetailModal.priorityId} onChange={(e) => {
+                                    handleOnChange(e)
+                                }} >
+                                    {listPriority.map((status, index) => {
+                                        return <option key={index} value={status.priorityId}>
+                                            {status.priority}
+                                        </option>
+                                    })}
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <h5>Assign</h5>
+                                <div className='row' style={{ display: "flex" }}>
+                                    {taskDetailModal.assigness.map((mem, index) => {
+                                        return <div className="col-6 mt-2 mb-2 text-center" style={{ display: "flex" }} key={index}>
+                                            <div>
+                                                <img style={{ width: "100%", borderRadius: "50%" }} src={mem.avatar} alt={mem.avatar} />
+                                                <p className='mt-1 ml-1'>{mem.name}
+
+                                                </p>
+                                            </div>
+                                            <div>
+
+                                                < h3 style={{ cursor: "pointer" }} onClick={() => {
+                                                    dispatch(delete_member_task(mem.id))
+                                                }}>x</h3>
+
+                                            </div>
+
+                                        </div>
+
+                                    })}
+                                </div>
+                            </div>
+
+                        </Col>
+
+                        <Col className='mt-3' span={24}>
+                            <p className=''>Add More</p>
+                            <select className='form-control' name="lstUser" id="" onChange={(e) => {
+                                const value = e.target.value
+                                if (value == 0) {
+                                    return;
+                                }
+                                let userSelect = projectDetail.members?.find(mem => mem.userId == value)
+                                userSelect = { ...userSelect, id: userSelect.userId }
+                                dispatch(add_member_task(userSelect))
+                            }}>
+                                <option value="0">Select Assign</option>
+                                {projectDetail.members?.filter(mem => {
+                                    let index = taskDetailModal.assigness?.findIndex(us => us.id == mem.userId)
+                                    if (index !== -1) {
+                                        return false
+                                    }
+                                    return true
+                                }).map((member, index) => {
+                                    return <option value={member.userId}>{member.name}
+
+                                    </option>
+
+                                })}
+                            </select>
 
                     </Col>
 

@@ -25,6 +25,7 @@ import {
    get_list_project,
    get_project_detail,
 } from '../reducer/projectReducer';
+import { get_detail_task } from '../reducer/taskModalReducer';
 
 import { getProjectList } from '../reducer/projectReducer';
 export const getAllProjectAction = () => {
@@ -57,6 +58,7 @@ export const getTaskDetailAction = (id) => {
    return async (dispatch) => {
       try {
          let result = await getTaskDetailService(id);
+         await dispatch(get_detail_task(result));
       } catch (error) {
          console.log(error);
       }
@@ -162,6 +164,7 @@ export const updateTaskAction = (data) => {
    return async (dispatch) => {
       try {
          let result = await updateTaskService(data);
+         console.log('huy111', result);
       } catch (error) {
          console.log(error);
       }
