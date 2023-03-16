@@ -189,6 +189,7 @@ export const updateStatusAction = (data) => {
    return async (dispatch) => {
       try {
          let result = await updateStatusService(data);
+         await dispatch(getProjectDetailAction(data.projectId, 1))
       } catch (error) {
          console.log(error);
       }
