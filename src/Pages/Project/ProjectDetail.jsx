@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Tag, Space, Button, Modal, Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { getProjectDetailAction, updateTaskAction } from '../../redux/action/projectAction';
+import { getProjectDetailAction, updateStatusAction, updateTaskAction } from '../../redux/action/projectAction';
 import parse from 'html-react-parser';
 import { getAllStatusAction } from '../../redux/action/statusAction';
 import { getAllPriorityAction } from '../../redux/action/priorityAction';
@@ -38,9 +38,23 @@ const ProjectDetail = (props) => {
 
     }
     const handleDragEnd = (result) => {
-        let {projectId,taskId} = JSON.parse(result.droppableId)
-        console.log(projectId,taskId)
-        console.log(result)
+        // let { projectId, taskId } = JSON.parse(result.droppableId)
+        // console.log(projectId, taskId)
+        // console.log(result)
+        let { destination, source } = result;
+        //Neu diem den khong ton tai thi return
+        if (!destination) {
+            return;
+        }
+        if (destination.index === source.index && destination.droppableId === source.droppableId) {
+            return;
+        }
+        let statusChange = {
+            'taskId': Number(result.draggableId),
+            'statusId': destination.droppableId,
+            'projectId': projectDetail?.id,
+        }
+        dispatch(updateStatusAction(statusChange))
 
     }
     console.log("huy", taskDetailModal)
@@ -55,51 +69,49 @@ const ProjectDetail = (props) => {
         return <DragDropContext onDragEnd={handleDragEnd}>
             {
                 projectDetail.lstTask?.map((colum, index) => {
-                    return <Droppable key={index} droppableId={colum.statusName}>
+                    return <Droppable key={index} droppableId={colum.statusId}>
                         {(provided) => {
-                            return <div style={{ width: "17rem" }} key={index} span={6}>
-                                <div
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                    key={index}
-                                    title={<Tag color={`${color[index]}`}>{colum.statusName}</Tag>} bordered={true} style={{ backgroundColor: '#F5F5F5' }}>
+                            return <Col ref={provided.innerRef} {...provided.droppableProps} key={index} span={6}>
+                                <Card title={<Tag color={`${color[index]}`}>{colum.statusName}</Tag>} bordered={true} style={{ backgroundColor: '#F5F5F5' }}>
                                     {colum.lstTaskDeTail.length > 0 ? (colum.lstTaskDeTail.map((task, index) => {
-                                        return <Draggable draggableId={JSON.stringify({projectId:task.projectId,taskId:task.taskId})} key={task.taskId.toString()} index={index}>
+                                        return <Draggable draggableId={task.taskId.toString()} key={task.taskId.toString()} index={index}>
                                             {(provided) => {
-                                                return <Card
-                                                    ref={provided.innerRef}
+                                                return <div ref={provided.innerRef}
                                                     {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    className='mb-2 text-center' onClick={() => {
-                                                        setOpen(true)
-                                                        console.log("task", task.taskId)
-                                                        dispatch(getTaskDetailAction(task.taskId))
-                                                        //    dispatch(getTaskDetailAction())
-                                                    }} key={index} title={task.taskName} bordered={true} style={{ backgroundColor: '#FFFFFF' }}>
-                                                    <Space key={index} style={{ marginBottom: "10px" }}>
-                                                        <div className="content" style={{ display: "flex" }}>
-                                                            <div className="row"  >
-                                                                {task.assigness.map((mem, index) => {
-                                                                    return <div className='col' key={index}>
-                                                                        <img style={{ width: "100%", borderRadius: "50%" }} src={mem.avatar} alt={mem.avatar} />
-                                                                    </div>
-                                                                })}
+                                                    {...provided.dragHandleProps}>
+                                                    <Card
+
+                                                        className='mb-2 text-center' onClick={() => {
+                                                            setOpen(true)
+                                                            console.log("task", task.taskId)
+                                                            dispatch(getTaskDetailAction(task.taskId))
+                                                            //    dispatch(getTaskDetailAction())
+                                                        }} key={index} title={task.taskName} bordered={true} style={{ backgroundColor: '#FFFFFF' }}>
+                                                        {/* <Space key={index} style={{ marginBottom: "10px" }}>
+                                                            <div className="content" style={{ display: "flex" }}>
+                                                                <div className="row"  >
+                                                                    {task.assigness.map((mem, index) => {
+                                                                        return <div className='col' key={index}>
+                                                                            <img style={{ width: "100%", borderRadius: "50%" }} src={mem.avatar} alt={mem.avatar} />
+                                                                        </div>
+                                                                    })}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </Space>
-                                                    <Space size={[0, 8]} wrap >
-                                                        {task.taskTypeDetail.id === 1 ? <Tag color="#f50">{task.taskTypeDetail.taskType}</Tag> : <Tag color="#108ee9">{task.taskTypeDetail.taskType}</Tag>}
-                                                        <Tag color="#2db7f5">{task.priorityTask.priority}</Tag>
-                                                    </Space>
-                                                </Card>
+                                                        </Space> */}
+                                                        <Space size={[0, 8]} wrap >
+                                                            {task.taskTypeDetail.id === 1 ? <Tag color="#f50">{task.taskTypeDetail.taskType}</Tag> : <Tag color="#108ee9">{task.taskTypeDetail.taskType}</Tag>}
+                                                            <Tag color="#2db7f5">{task.priorityTask.priority}</Tag>
+                                                        </Space>
+                                                    </Card>
+                                                </div>
                                             }}
                                         </Draggable>
                                     })) : ''}
 
-                                    {provided.placeholder}
-                                </div>
 
-                            </div>
+                                </Card>
+                                {provided.placeholder}
+                            </Col>
                         }}
                     </Droppable>
                 })}
