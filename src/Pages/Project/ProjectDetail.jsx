@@ -85,7 +85,6 @@ const ProjectDetail = (props) => {
                                                             setOpen(true)
                                                             console.log("task", task.taskId)
                                                             dispatch(getTaskDetailAction(task.taskId))
-                                                            //    dispatch(getTaskDetailAction())
                                                         }} key={index} title={task.taskName} bordered={true} style={{ backgroundColor: '#FFFFFF' }}>
                                                         {/* <Space key={index} style={{ marginBottom: "10px" }}>
                                                             <div className="content" style={{ display: "flex" }}>
