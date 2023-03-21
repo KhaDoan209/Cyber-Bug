@@ -86,17 +86,6 @@ const ProjectDetail = (props) => {
                                                             console.log("task", task.taskId)
                                                             dispatch(getTaskDetailAction(task.taskId))
                                                         }} key={index} title={task.taskName} bordered={true} style={{ backgroundColor: '#FFFFFF' }}>
-                                                        {/* <Space key={index} style={{ marginBottom: "10px" }}>
-                                                            <div className="content" style={{ display: "flex" }}>
-                                                                <div className="row"  >
-                                                                    {task.assigness.map((mem, index) => {
-                                                                        return <div className='col' key={index}>
-                                                                            <img style={{ width: "100%", borderRadius: "50%" }} src={mem.avatar} alt={mem.avatar} />
-                                                                        </div>
-                                                                    })}
-                                                                </div>
-                                                            </div>
-                                                        </Space> */}
                                                         <Space size={[0, 8]} wrap >
                                                             {task.taskTypeDetail.id === 1 ? <Tag color="#f50">{task.taskTypeDetail.taskType}</Tag> : <Tag color="#108ee9">{task.taskTypeDetail.taskType}</Tag>}
                                                             <Tag color="#2db7f5">{task.priorityTask.priority}</Tag>
