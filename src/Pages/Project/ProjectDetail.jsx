@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Tag, Space, Button, Modal, Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { getProjectDetailAction, updateStatusAction, updateTaskAction } from '../../redux/action/projectAction';
+import { getProjectDetailAction, updateTaskAction } from '../../redux/action/projectAction';
 import parse from 'html-react-parser';
 import { getAllStatusAction } from '../../redux/action/statusAction';
 import { getAllPriorityAction } from '../../redux/action/priorityAction';
@@ -38,23 +38,9 @@ const ProjectDetail = (props) => {
 
     }
     const handleDragEnd = (result) => {
-        // let { projectId, taskId } = JSON.parse(result.droppableId)
-        // console.log(projectId, taskId)
-        // console.log(result)
-        let { destination, source } = result;
-        //Neu diem den khong ton tai thi return
-        if (!destination) {
-            return;
-        }
-        if (destination.index === source.index && destination.droppableId === source.droppableId) {
-            return;
-        }
-        let statusChange = {
-            'taskId': Number(result.draggableId),
-            'statusId': destination.droppableId,
-            'projectId': projectDetail?.id,
-        }
-        dispatch(updateStatusAction(statusChange))
+        let { projectId, taskId } = JSON.parse(result.droppableId)
+        console.log(projectId, taskId)
+        console.log(result)
 
     }
     console.log("huy", taskDetailModal)
@@ -208,86 +194,85 @@ const ProjectDetail = (props) => {
                             </Col>
                         </Row>
                     </Col>
-                    <Col span={8}>
-                        <Col span={24}>
-                            <div className="form-group">
-                                <h5>Status</h5>
-                                <select name='statusId' className='form-control' value={taskDetailModal.statusId} onChange={(e) => {
-                                    handleOnChange(e)
-                                }}>
-                                    {listStatus.map((status, index) => {
-                                        return <option key={index} value={status.statusId}>
-                                            {status.statusName}
-                                        </option>
-                                    })}
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <h5>Priority</h5>
-                                <select name='priorityId' className='form-control' value={taskDetailModal.priorityId} onChange={(e) => {
-                                    handleOnChange(e)
-                                }} >
-                                    {listPriority.map((status, index) => {
-                                        return <option key={index} value={status.priorityId}>
-                                            {status.priority}
-                                        </option>
-                                    })}
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <h5>Assign</h5>
-                                <div className='row' style={{ display: "flex" }}>
-                                    {taskDetailModal.assigness.map((mem, index) => {
-                                        return <div className="col-6 mt-2 mb-2 text-center" style={{ display: "flex" }} key={index}>
-                                            <div>
-                                                <img style={{ width: "100%", borderRadius: "50%" }} src={mem.avatar} alt={mem.avatar} />
-                                                <p className='mt-1 ml-1'>{mem.name}
 
-                                                </p>
-                                            </div>
-                                            <div>
+                    <Col span={24}>
 
-                                                < h3 style={{ cursor: "pointer" }} onClick={() => {
-                                                    dispatch(delete_member_task(mem.id))
-                                                }}>x</h3>
+                        <div className="form-group">
+                            <h5>Status</h5>
+                            <select name='statusId' className='form-control' value={taskDetailModal.statusId} onChange={(e) => {
+                                handleOnChange(e)
+                            }}>
+                                {listStatus.map((status, index) => {
+                                    return <option key={index} value={status.statusId}>
+                                        {status.statusName}
+                                    </option>
+                                })}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <h5>Priority</h5>
+                            <select name='priorityId' className='form-control' value={taskDetailModal.priorityId} onChange={(e) => {
+                                handleOnChange(e)
+                            }} >
+                                {listPriority.map((status, index) => {
+                                    return <option key={index} value={status.priorityId}>
+                                        {status.priority}
+                                    </option>
+                                })}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <h5>Assign</h5>
+                            <div className='row' style={{ display: "flex" }}>
+                                {taskDetailModal.assigness.map((mem, index) => {
+                                    return <div className="col-6 mt-2 mb-2 text-center" style={{ display: "flex" }} key={index}>
+                                        <div>
+                                            <img style={{ width: "100%", borderRadius: "50%" }} src={mem.avatar} alt={mem.avatar} />
+                                            <p className='mt-1 ml-1'>{mem.name}
 
-                                            </div>
+                                            </p>
+                                        </div>
+                                        <div>
+
+                                            < h3 style={{ cursor: "pointer" }} onClick={() => {
+                                                dispatch(delete_member_task(mem.id))
+                                            }}>x</h3>
 
                                         </div>
 
-                                    })}
-                                </div>
-                            </div>
-
-                        </Col>
-
-                        <Col className='mt-3' span={24}>
-                            <p className=''>Add More</p>
-                            <select className='form-control' name="lstUser" id="" onChange={(e) => {
-                                const value = e.target.value
-                                if (value == 0) {
-                                    return;
-                                }
-                                let userSelect = projectDetail.members?.find(mem => mem.userId == value)
-                                userSelect = { ...userSelect, id: userSelect.userId }
-                                dispatch(add_member_task(userSelect))
-                            }}>
-                                <option value="0">Select Assign</option>
-                                {projectDetail.members?.filter(mem => {
-                                    let index = taskDetailModal.assigness?.findIndex(us => us.id == mem.userId)
-                                    if (index !== -1) {
-                                        return false
-                                    }
-                                    return true
-                                }).map((member, index) => {
-                                    return <option value={member.userId}>{member.name}
-
-                                    </option>
+                                    </div>
 
                                 })}
-                            </select>
+                            </div>
+                        </div>
 
-                        </Col>
+                    </Col>
+
+                    <Col className='mt-3' span={24}>
+                        <p className=''>Add More</p>
+                        <select className='form-control' name="lstUser" id="" onChange={(e) => {
+                            const value = e.target.value
+                            if (value == 0) {
+                                return;
+                            }
+                            let userSelect = projectDetail.members?.find(mem => mem.userId == value)
+                            userSelect = { ...userSelect, id: userSelect.userId }
+                            dispatch(add_member_task(userSelect))
+                        }}>
+                            <option value="0">Select Assign</option>
+                            {projectDetail.members?.filter(mem => {
+                                let index = taskDetailModal.assigness?.findIndex(us => us.id == mem.userId)
+                                if (index !== -1) {
+                                    return false
+                                }
+                                return true
+                            }).map((member, index) => {
+                                return <option value={member.userId}>{member.name}
+                                </option>
+
+                            })}
+                        </select>
+
                     </Col>
                 </Row>
             </Modal >
