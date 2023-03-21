@@ -7,26 +7,25 @@ const initialState = {
             "priority": "Medium"
         },
         "taskTypeDetail": {
-            "id": 1,
-            "taskType": "bug"
+            "id": 2,
+            "taskType": "new task"
         },
         "assigness": [
-            { userId: 2537, name: 'Admin Cyberlearn - 02', avatar: 'https://ui-avatars.com/api/?name=Admin Cyberlearn - 02', email: null, phoneNumber: null },
-            { userId: 3960, name: 'Đỗ Nhật', avatar: 'https://ui-avatars.com/api/?name=Đỗ Nhật', email: null, phoneNumber: null },
-            { userId: 3974, name: 'LE TRAN QUANG TÈOa', avatar: 'https://ui-avatars.com/api/?name=LE TRAN QUANG TÈOa', email: null, phoneNumber: null }
+
+
         ],
         "lstComment": [],
-        "taskId": 9298,
-        "taskName": "thanh",
-        "alias": "thanh",
-        "description": "day la description",
-        "statusId": "2",
-        "originalEstimate": 0,
-        "timeTrackingSpent": 0,
-        "timeTrackingRemaining": 0,
-        "typeId": 1,
+        "taskId": 9283,
+        "taskName": "trung",
+        "alias": "trung",
+        "description": "<p>11222vdvdvdfvfvfv</p>",
+        "statusId": "1",
+        "originalEstimate": 12,
+        "timeTrackingSpent": 4,
+        "timeTrackingRemaining": 12,
+        "typeId": 2,
         "priorityId": 2,
-        "projectId": 11879
+        "projectId": 11848
     },
 
 }
@@ -35,12 +34,32 @@ const taskModalReducer = createSlice({
     name: 'taskModalReducer',
     initialState,
     reducers: {
-        // get_list_tasktype: (state, action) => {
-        //     state.listTaskTypes = action.payload;
-        // },
+
+        get_detail_task: (state, action) => {
+            state.taskDetailModal = action.payload;
+
+
+        },
+        update_detail_task: (state, action) => {
+
+            state.taskDetailModal = action.payload;
+        },
+        add_member_task: (state, action) => {
+
+            state.taskDetailModal.assigness = [...state.taskDetailModal.assigness, action.payload];
+        },
+        delete_member_task: (state, action) => {
+
+            state.taskDetailModal.assigness = state.taskDetailModal.assigness.filter(user => user.id !== action.payload)
+            
+        },
+
+
+
+
     },
 });
 
-export const { } = taskModalReducer.actions;
+export const { get_detail_task, update_detail_task, update_description_task, add_member_task, delete_member_task } = taskModalReducer.actions;
 
 export default taskModalReducer.reducer;
