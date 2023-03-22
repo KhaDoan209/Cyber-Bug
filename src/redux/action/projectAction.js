@@ -68,6 +68,7 @@ export const createProjectAction = (data) => {
          let result = await createProjectService(data);
       } catch (error) {
          console.log(error);
+
       }
    };
 };
