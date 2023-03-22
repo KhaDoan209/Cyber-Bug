@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { ACCESS_TOKEN, Domain, TokenCyber } from '../utils/settings';
 
-
-
-
 export const http = axios.create();
 http.interceptors.request.use(
    function (config) {

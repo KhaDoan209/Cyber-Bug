@@ -5,9 +5,16 @@ import {
    getUserByProjectIdService,
    editUserService,
    deleteUserService,
+   getListUserService,
+   getUserDetailService,
 } from '../../services/ProjectService/userService';
 import { ACCESS_TOKEN, USER_LOGIN } from '../../utils/settings';
-import { getAllUserReducer, getUserFromProject } from '../reducer/userReducer';
+import {
+   getAllUserReducer,
+   getListUserReducer,
+   getUserDetailReducer,
+   getUserFromProject,
+} from '../reducer/userReducer';
 import { history } from '../../App';
 import { notifiFunction } from '../../utils/Notification/notification';
 
@@ -15,7 +22,6 @@ export const signUpAction = (accountToSignUp) => {
    return async (dispatch) => {
       try {
          const result = await signUpService(accountToSignUp);
-         // console.log('result', result)
          notifiFunction('success', 'Register thành công !');
          history.push('/login');
       } catch (error) {
@@ -29,9 +35,8 @@ export const signInAction = (accountToSignIn) => {
    return async (dispatch) => {
       try {
          const result = await signInService(accountToSignIn);
-         // Lưu vào localStorage khi đăng nhập thành công
-         localStorage.setItem(ACCESS_TOKEN, result.accessToken)
-         localStorage.setItem(USER_LOGIN, JSON.stringify(result))
+         localStorage.setItem(ACCESS_TOKEN, result.accessToken);
+         localStorage.setItem(USER_LOGIN, JSON.stringify(result));
 
          history.push('/');
       } catch (error) {
@@ -40,12 +45,42 @@ export const signInAction = (accountToSignIn) => {
    };
 };
 
+export const logOutAction = () => {
+   return async () => {
+      try {
+         localStorage.removeItem('signedInAccount');
+         localStorage.removeItem('ACCESS_TOKEN');
+         history.replace('/login');
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
 export const getAllUserAction = (keyword) => {
    return async (dispatch) => {
       try {
          const result = await getAllUserService(keyword);
          dispatch(getAllUserReducer(result));
-         // console.log("data", result)
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+export const getListUserAction = () => {
+   return async (dispatch) => {
+      try {
+         const result = await getListUserService();
+         dispatch(getListUserReducer(result));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+export const getUserDetailAction = (keyword) => {
+   return async (dispatch) => {
+      try {
+         const result = await getUserDetailService(keyword);
+         dispatch(getUserDetailReducer(result));
       } catch (error) {
          console.log(error);
       }
@@ -53,15 +88,14 @@ export const getAllUserAction = (keyword) => {
 };
 
 export const getUserByProjectIdAction = (id) => {
-   console.log('id', id);
    return async (dispatch) => {
       try {
          const result = await getUserByProjectIdService(id);
-         console.log("arr",result)   
-            await dispatch(getUserFromProject(result))
+         console.log('arr', result);
+         await dispatch(getUserFromProject(result));
       } catch (error) {
          console.log(error);
-         if (error.statusCode === 404){
+         if (error.statusCode === 404) {
             dispatch(getUserFromProject([]));
          }
       }
@@ -71,7 +105,10 @@ export const getUserByProjectIdAction = (id) => {
 export const editUserAction = (infor) => {
    return async (dispatch) => {
       try {
-         const result = await editUserService(infor);
+         await editUserService(infor);
+         alert('Update successfully');
+         const result = await getListUserService();
+         dispatch(getListUserReducer(result));
       } catch (error) {
          console.log(error);
       }
@@ -81,9 +118,12 @@ export const editUserAction = (infor) => {
 export const deleteUserAction = (id) => {
    return async (dispatch) => {
       try {
-         const result = await deleteUserService(id);
+         await deleteUserService(id);
+         alert('User removed successfully');
+         const result = await getListUserService();
+         dispatch(getListUserReducer(result));
       } catch (error) {
-         console.log(error);
+         alert(error.content);
       }
    };
 };

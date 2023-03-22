@@ -20,9 +20,7 @@ const FormEditProject = (props) => {
     } = props;
     const dispatch = useDispatch();
     useEffect(() => {
-        // Goi api category
         dispatch(getProjectCategoryAction())
-        // //Load event submit len drawer nut submit
         dispatch(set_submit(handleSubmit))
     }, []);
 

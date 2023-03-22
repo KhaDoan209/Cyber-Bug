@@ -15,15 +15,12 @@ const handleChange = (value) => {
     console.log(`Selected: ${value}`);
 };
 function FormCreateTask(props) {
-    // lay du lieu tu redux
     const { projectList } = useSelector(state => state.projectReducer);
     const { listStatus } = useSelector(state => state.statusReducer);
     const { listPriority } = useSelector(state => state.priorityReducer);
     const { listTaskTypes } = useSelector(state => state.taskTypeReducer);
     const { listUserFromProject } = useSelector(state => state.userReducer);
     
-    // console.log('listTaskTypes',listTaskTypes)
-
     const optionUserSearch = listUserFromProject.map((item, index) => {
         return { value: item.userId, label: item.name }
     })
@@ -36,7 +33,7 @@ function FormCreateTask(props) {
         handleBlur,
         handleSubmit,
         setFieldValue,
-    } = props; // cac prop sinh ra do formik => component
+    } = props; 
     const [timeTracking, setTimeTracking] = useState({
         timeTrackingSpent: 0,
         timeTrackingRemaining: 0,
@@ -46,14 +43,11 @@ function FormCreateTask(props) {
         setSize(e.target.value);
     };
 
-    //hook 
     useEffect(() => {
         dispatch(getAllStatusAction())
         dispatch(getAllPriorityAction())
         dispatch(getAllTaskTypeAction())
-        // //Đưa hàm handle submit lên drawer reducer lên để cập nhật lại sưj kiện cho nút Submit
         dispatch(set_submit_create_task(handleSubmit))
-        // dispatch({ type: GET_USER_API, keyword: '' })
     }, [])
     return (
         <form className='container' onSubmit={handleSubmit}>
@@ -61,11 +55,8 @@ function FormCreateTask(props) {
                 <p>Project</p>
                 <select name="projectId" className='form-control' onChange={(e) => {
                     console.log('validationSchema', e.target.value);
-                    //dispatch gia tri lam thay doi arruser
                     let { value } = e.target;
-                    // dispatch len project duoc chon de lay thong tin project => user co trong project
                     dispatch(getUserByProjectIdAction(value))
-                    // cap nhat gia tri project id
                     setFieldValue('projectId', e.target.value);
                 }}>
                     {projectList.map((project, index) => {
@@ -121,7 +112,6 @@ function FormCreateTask(props) {
                             mode="multiple"
                             size={size}
                             placeholder="Please select"
-                            // defaultValue={['a10', 'c12']}
                             onChange={(values) => {
                                 setFieldValue('listUserAsign', values)
                             }}
@@ -148,9 +138,7 @@ function FormCreateTask(props) {
                             defaultValue={30}
                             value={timeTracking.timeTrackingSpent}
                             max={Number(timeTracking.timeTrackingSpent) + Number(timeTracking.timeTrackingRemaining)}
-                        // tooltip={{
-                        //     open: true,
-                        // }}
+                    
                         />
                         <div className="row">
                             <div className="col-6 text-left font-weight-bold">{timeTracking.timeTrackingSpent}h logged</div>
@@ -215,7 +203,6 @@ const createTaskForm = withFormik({
     mapPropsToValues: (props) => {
         const { projectList, listTaskTypes, listPriority, listStatus } = props;
         if (projectList.lenght > 0) {
-            // props.dispatch({ type: GET_USER_BY_PROJECT_SAGA, idProject: projectList[0]?.id })
         }
         return {
             taskName: "",
