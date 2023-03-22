@@ -6,7 +6,9 @@ import {
    editUserService,
    deleteUserService,
 } from '../../services/ProjectService/userService';
+import { ACCESS_TOKEN, USER_LOGIN } from '../../utils/settings';
 import { getAllUserReducer } from '../reducer/userReducer';
+import { history } from '../../App';
 
 export const signUpAction = (accountToSignUp) => {
    return async (dispatch) => {
@@ -22,6 +24,12 @@ export const signInAction = (accountToSignIn) => {
    return async (dispatch) => {
       try {
          const result = await signInService(accountToSignIn);
+         console.log('data', result)
+         // Lưu vào localStorage khi đăng nhập thành công
+         localStorage.setItem(ACCESS_TOKEN, result.accessToken)
+         localStorage.setItem(USER_LOGIN, JSON.stringify(result))
+         
+         history.push('/');
       } catch (error) {
          console.log(error);
       }

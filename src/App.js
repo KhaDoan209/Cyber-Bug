@@ -5,10 +5,14 @@ import FormTemplate from './template/FormTemplate';
 import HomeTemplate from './template/HomeTemplate';
 import Login from './Pages/Login/Login';
 import ProjectDashboard from './Pages/Project/ProjectDashboard';
+import Loading from './components/Loading/Loading';
+import DrawerHOC from './components/HOC/DrawerHOC';
 export const history = createBrowserHistory();
 function App() {
    return (
       <Router history={history}>
+         <Loading/>
+         <DrawerHOC/>
          <Switch>
             <HomeTemplate
                path='/home'

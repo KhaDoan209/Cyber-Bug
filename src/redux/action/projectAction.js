@@ -19,6 +19,8 @@ import {
    deleteProjectService,
    deleteTaskService,
 } from '../../services/ProjectService/projectService';
+import { notifiFunction } from '../../utils/Notification/notification';
+import { get_list_project } from '../reducer/projectReducer';
 
 import { getProjectList } from '../reducer/projectReducer';
 export const getAllProjectAction = () => {
@@ -67,6 +69,8 @@ export const createProjectAuthorizeAction = (data) => {
    return async (dispatch) => {
       try {
          let result = await createProjectAuthorizeService(data);
+         await dispatch(getAllProjectAction());
+         notifiFunction('success', 'Add Project thành công nha !');
       } catch (error) {
          console.log(error);
       }
@@ -137,8 +141,12 @@ export const updateProjectAction = (id, data) => {
    return async (dispatch) => {
       try {
          let result = await updateProjectService(id, data);
+         notifiFunction('success', 'Edit thành công nha !');
       } catch (error) {
          console.log(error);
+         if (error.statusCode === 403) {
+            notifiFunction('error', 'Project không phải của bạn đâu đừng update, nhiều bạn phàn nàn lắm đó !');
+         }
       }
    };
 };
@@ -197,8 +205,13 @@ export const deleteProjectAction = (id) => {
    return async (dispatch) => {
       try {
          let result = await deleteProjectService(id);
+         await dispatch(getAllProjectAction())
+         notifiFunction('success', 'Delete thành công nha !');
       } catch (error) {
          console.log(error);
+         if (error.statusCode === 403) {
+            notifiFunction('error', 'Project không phải của bạn đâu đừng delete, nhiều bạn phàn nàn lắm đó !');
+         }
       }
    };
 };

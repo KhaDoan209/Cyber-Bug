@@ -1,17 +1,56 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import Header from '../components/Header/Header';
+import SiderBar from '../components/SiderBar/SiderBar';
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
+const { Header, Content, Footer, Sider } = Layout;
+
 const HomeTemplate = (props) => {
+   const {
+      token: { colorBgContainer },
+   } = theme.useToken();
    return (
       <Route
          exact
          path={props.path}
          render={(propsRoute) => {
             return (
-               <>
-                  <Header />
-                  <props.component {...propsRoute} />
-               </>
+               <Layout
+                  style={{
+                     minHeight: '100vh',
+                  }}
+               >
+                  <SiderBar />
+                  <Layout className="site-layout">
+                     <Header
+                        style={{
+                           padding: 0,
+                           background: colorBgContainer,
+                        }}
+                     />
+                     <Content
+                        style={{
+                           margin: '0 16px',
+                        }}
+                     >
+                        <div
+                           style={{
+                              padding: 24,
+                              minHeight: 360,
+                              background: colorBgContainer,
+                           }}
+                        >
+                           <props.component {...propsRoute} />
+                        </div>
+                     </Content>
+                     <Footer
+                        style={{
+                           textAlign: 'center',
+                        }}
+                     >
+                        Capstone final project !!!
+                     </Footer>
+                  </Layout>
+               </Layout>
             );
          }}
       />
