@@ -1,9 +1,16 @@
 import { http } from '../interceptor';
 
-export const getAllUserService = () => {
-   return http.get('api/Users/getUser');
+export const getListUserService = () => {
+   return http.get(`api/Users/getUser`);
 };
 
+export const getAllUserService = (keyword) => {
+   return http.get(`api/Users/getUser?keyword=${keyword}`);
+};
+
+export const getUserDetailService = (keyword) => {
+   return http.get(`api/Users/getUser?keyword=${keyword}`);
+};
 export const getUserByProjectIdService = (id) => {
    return http.get(`api/Users/getUserByProjectId?idProject=${id}`);
 };
