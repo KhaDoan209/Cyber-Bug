@@ -299,33 +299,34 @@ const ProjectDetail = (props) => {
                                 })}
                             </select>
 
-                    </Col>
+                        </Col>
 
-                    <Col className='mt-3' span={24}>
-                        <p className=''>Add More</p>
-                        <select className='form-control' name="lstUser" id="" onChange={(e) => {
-                            const value = e.target.value
-                            if (value == 0) {
-                                return;
-                            }
-                            let userSelect = projectDetail.members?.find(mem => mem.userId == value)
-                            userSelect = { ...userSelect, id: userSelect.userId }
-                            dispatch(add_member_task(userSelect))
-                        }}>
-                            <option value="0">Select Assign</option>
-                            {projectDetail.members?.filter(mem => {
-                                let index = taskDetailModal.assigness?.findIndex(us => us.id == mem.userId)
-                                if (index !== -1) {
-                                    return false
+                        <Col className='mt-3' span={24}>
+                            <p className=''>Add More</p>
+                            <select className='form-control' name="lstUser" id="" onChange={(e) => {
+                                const value = e.target.value
+                                if (value == 0) {
+                                    return;
                                 }
-                                return true
-                            }).map((member, index) => {
-                                return <option value={member.userId}>{member.name}
-                                </option>
+                                let userSelect = projectDetail.members?.find(mem => mem.userId == value)
+                                userSelect = { ...userSelect, id: userSelect.userId }
+                                dispatch(add_member_task(userSelect))
+                            }}>
+                                <option value="0">Select Assign</option>
+                                {projectDetail.members?.filter(mem => {
+                                    let index = taskDetailModal.assigness?.findIndex(us => us.id == mem.userId)
+                                    if (index !== -1) {
+                                        return false
+                                    }
+                                    return true
+                                }).map((member, index) => {
+                                    return <option value={member.userId}>{member.name}
+                                    </option>
 
-                            })}
-                        </select>
+                                })}
+                            </select>
 
+                        </Col>
                     </Col>
                 </Row>
             </Modal >
