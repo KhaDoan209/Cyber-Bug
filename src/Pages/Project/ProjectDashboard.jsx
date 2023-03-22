@@ -22,7 +22,6 @@ const cancel = (e) => {
 const ProjectDashboard = () => {
    const { projectList } = useSelector(state => state.projectReducer);
    const { allUser } = useSelector(state => state.userReducer)
-   // console.log(' list', allUser)
    const searchRef = useRef(null);
    const dispatch = useDispatch();
 
@@ -117,7 +116,6 @@ const ProjectDashboard = () => {
                                           userId: item.userId,
                                           projectId: record.id,
                                        }
-                                       //gửi action xóa
                                        dispatch(removeUserFromProjectAction(userProject))
                                     }} />
                                  </td>
@@ -143,13 +141,11 @@ const ProjectDashboard = () => {
                         setValue(text);
                      }}
                      onSelect={(valueSelect, option) => {
-                        // set gia  tri hop thoai 
                         setValue(option.label);
                         let userProject = {
                            'projectId': record.id,
                            'userId': Number(valueSelect)
                         }
-                        //goi api assignUserProject de add user vao project
                         dispatch(assignUserProjectAction(userProject))
 
                      }}
@@ -161,7 +157,6 @@ const ProjectDashboard = () => {
                            clearTimeout(searchRef.current);
                         }
                         searchRef.current = setTimeout(() => {
-                           // call api lay danh sach tat ca user
                            dispatch(getAllUserAction(value))
                         }, 300)
                      }} />
@@ -177,16 +172,13 @@ const ProjectDashboard = () => {
          render: (text, record, index) => (
             <Space key={index} size='middle'>
                <button className='btn btn-primary mr-2' onClick={() => {
-                  //Dispatch len reducer cai form can load kieu nao
                   dispatch(open_drawer_edit());
-                  //Disatch du lieu dong hien tai can edit
                   dispatch(edit_project(record));
                }}><EditOutlined /></button>
 
                <Popconfirm
                   title="Delete Project ?"
                   onConfirm={() => {
-                     // gui dispatch id project can xoa
                      dispatch(deleteProjectAction(record.id))
                   }}
                   onCancel={cancel}

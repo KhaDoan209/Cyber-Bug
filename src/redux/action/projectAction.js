@@ -30,7 +30,6 @@ export const getAllProjectAction = () => {
       try {
          await dispatch(displayLoading());
          let result = await getAllProjectService();
-         // console.log('data',result);
          await dispatch(get_list_project(result));
          await dispatch(hideLoading());
       } catch (error) {

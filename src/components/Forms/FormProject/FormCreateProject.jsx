@@ -21,9 +21,7 @@ function FormCreateProject(props) {
   } = props;
 
   useEffect(() => {
-    //GỌI API để láy dữ liệu thẻ select
     dispatch(getProjectCategoryAction())
-    // //Load event submit len drawer nut submit
     dispatch(set_submit(handleSubmit))
   }, []);
 
@@ -85,7 +83,6 @@ const createProjectForm = withFormik({
 
   }),
   handleSubmit: (values, { props, setSubmitting }) => {
-    // console.log('value ne', values)
      props.dispatch(createProjectAuthorizeAction(values));
   },
 
